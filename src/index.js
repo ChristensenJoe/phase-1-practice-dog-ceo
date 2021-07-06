@@ -1,7 +1,7 @@
 console.log('%c HI', 'color: firebrick')
 const imgUrl = "https://dog.ceo/api/breeds/image/random/4";
 const breedUrl = 'https://dog.ceo/api/breeds/list/all';
-
+let breedJSON = {};
 
 
 document.addEventListener("DOMContentLoaded", domLoaded);
@@ -13,11 +13,12 @@ function domLoaded() {
 }
 
 function challengeFour(){
-    
     let breedSelector = document.querySelector("#breed-dropdown");
      breedSelector.addEventListener('change', (e) =>{
-    let allBreeds = document.querySelectorAll('li')
-     removeList();   
+
+        addList(breedJSON);
+        let allBreeds = document.querySelectorAll('li')
+        removeList();   
         let currentBreeds = []
         
         allBreeds.forEach( (element) => {
@@ -57,7 +58,26 @@ function challengeTwo() {
     fetch('https://dog.ceo/api/breeds/list/all')
     .then(res => res.json())
     .then(json => {
-        const list = document.querySelector("#dog-breeds");
+        breedJSON = json;
+        addList(json);
+    });
+}
+
+function challengeOne() {
+    fetch(imgUrl)
+    .then(res => res.json())
+    .then(json => {
+        json.message.forEach((element) => {
+            const dogImgContainer = document.querySelector("#dog-image-container");
+            let img = document.createElement("img");
+            img.src = element;
+            dogImgContainer.append(img);
+        });
+    });
+}
+
+function addList(json) {
+    const list = document.querySelector("#dog-breeds");
         for(breed in json.message) {
             let breedItem = document.createElement("li");
             breedItem.addEventListener('click', fontChanger)
@@ -74,18 +94,4 @@ function challengeTwo() {
             }
             list.append(breedItem);
         }
-    });
-}
-
-function challengeOne() {
-    fetch(imgUrl)
-    .then(res => res.json())
-    .then(json => {
-        json.message.forEach((element) => {
-            const dogImgContainer = document.querySelector("#dog-image-container");
-            let img = document.createElement("img");
-            img.src = element;
-            dogImgContainer.append(img);
-        });
-    });
 }
